@@ -38,18 +38,18 @@ public class BookController {
 		System.out.println("Processing saveUser...");
 		
 		Books book = new Books(numPage, numPage, numPage, synopsis, synopsis, synopsis);
-		book.title = title;
-		book.author = author;
-		book.synopsis = synopsis;
-		book.yearBook = yearBook;
-		book.numPage = numPage;
-		book.id = counter;
+		book.setTitle(title);
+		book.setAuthor(author);
+		book.setSynopsis(synopsis);
+		book.setYearBook(yearBook);
+		book.setNumPage(numPage);
+		book.setId(counter);
 		
 		mapBook.put(counter, book);
 		
 		counter++;
 		
-		return ResponseEntity.ok(book.id);
+		return ResponseEntity.ok(book.getId());
 	}
 	
 	@RequestMapping(value = "/search-id/{id}", method = RequestMethod.GET)	 
@@ -59,6 +59,17 @@ public class BookController {
 		System.out.println("Processing search id...");
 		return ResponseEntity.ok(mapBook.get(id));
 	}
+	
+	
+	 @RequestMapping(value = "/list/", method = RequestMethod.GET)	 
+	 public ResponseEntity<List<Books>> list()			  
+		     throws Exception {		 
+		 
+		 System.out.println("Searching list ");
+		 ArrayList<Books> list = new ArrayList<>(mapBook.values());
+		 		 
+		 return ResponseEntity.ok(list);
+	  }
 	
 	
 }
