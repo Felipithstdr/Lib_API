@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mbs.entidades.Books;
+import br.com.mbs.entidades.User;
 import io.swagger.annotations.Api;
 
 @RestController(value="API para manipulacao de uma biblioteca")
@@ -26,6 +27,18 @@ public class BookController {
 	Map<Integer, Books> mapBook = new HashMap<Integer, Books>();
 	Integer counter = 1;
 	
+	Map<Integer, User> mapUser = new HashMap<Integer, User>();
+	
+	@RequestMapping(value = "/rent-book/", method = RequestMethod.POST)
+	public void rentBook(
+			@RequestParam("name") String name,
+			@RequestParam("books") Books book)
+			throws Exception {
+		User user = new User();
+		user.setName(name);
+		user.setBooks(book.getId());
+		mapUser.put(counter, user);
+	}
 	  
 	@RequestMapping(value = "/save/", method = RequestMethod.POST)	 
 	public ResponseEntity<Integer> saveUser(
