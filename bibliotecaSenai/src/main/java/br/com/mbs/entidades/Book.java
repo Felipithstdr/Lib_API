@@ -1,20 +1,8 @@
 package br.com.mbs.entidades;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Books {
+public class Book {
 	private  Integer id, numPage, yearBook;
 	private String title, author, synopsis;
-	
-	public Books(Integer id, Integer numPage, Integer yearBook, String title, String author, String synopsis) {
-		this.id = id;
-		this.numPage = numPage;
-		this.yearBook = yearBook;
-		this.title = title;
-		this.author = author;
-		this.synopsis = synopsis;
-	}
 
 	public Integer getId() {
 		return id;

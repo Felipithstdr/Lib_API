@@ -1,14 +1,9 @@
 package br.com.mbs.entidades;
 
 public class User {
-	private int id;
+	private Integer id;
 	private String name;
-	private Integer books;
-	
-	public void rentBook(Books books) {
-		System.out.println(books);
-	}
-	
+		
 	public int getId() {
 		return id;
 	}
@@ -20,13 +15,5 @@ public class User {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public Integer getBooks() {
-		return books;
-	}
-	public void setBooks(Integer integer) {
-		this.books = integer;
-	}
-	
-	
+	}	
 }
