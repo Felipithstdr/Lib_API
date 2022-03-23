@@ -3,36 +3,47 @@ package br.com.mbs.entidades;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+
+
 public class Books {
-	public Integer id, numPage, yearBook;
+
+	public int id, numPage, yearBook, quantity;
 	public String title, author, synopsis;
 	
-	public Books(Integer id, Integer numPage, Integer yearBook, String title, String author, String synopsis) {
+	public Books(int id, int  numPage, int  yearBook, int  quantity, String title, String author, String synopsis) {
 		this.id = id;
 		this.numPage = numPage;
 		this.yearBook = yearBook;
+		this.quantity = quantity;
 		this.title = title;
 		this.author = author;
 		this.synopsis = synopsis;
 	}
 	
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
-	public Integer getNumPage() {
+	public int getNumPage() {
 		return numPage;
 	}
-	public void setNumPage(Integer numPage) {
+	public void setNumPage(int numPage) {
 		this.numPage = numPage;
 	}
-	public Integer getYearBook() {
+	public int getYearBook() {
 		return yearBook;
 	}
-	public void setYearBook(Integer yearBook) {
+	public void setYearBook(int yearBook) {
 		this.yearBook = yearBook;
+	}
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 	public String getTitle() {
 		return title;
