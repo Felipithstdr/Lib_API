@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 import br.com.mbs.entidades.Books;
+import br.com.mbs.entidades.BuyBook;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -26,8 +27,9 @@ public class BookController {
 	
 	
 	Map<Integer, Books> mapBook = new HashMap<Integer, Books>();
+	Map<Integer, BuyBook> mapBuyBook = new HashMap<Integer, BuyBook>();
 	Integer counter = 1;
-	
+	Integer buyCounter = 1;
 	
 	@ApiOperation (value = "Cadastro de de livros")
 	@ApiResponses(value = {
@@ -70,21 +72,33 @@ public class BookController {
 	}
 	
 	@RequestMapping(value = "/buyBook/{id}", method = RequestMethod.PUT)	 
-	public ResponseEntity<Books> buyBook(@PathVariable("id") Integer id)
+	public ResponseEntity<Integer> buyBook(@PathVariable("id") Integer id, 
+			@RequestBody BuyBook buyBook)
 
 			throws Exception {		 
 				System.out.println("Processing buyBook...");
 
-				
 				if(mapBook.containsKey(id)) {
-					
-					System.out.println("Found book");			
+					System.out.println("Found book");
+					buyBook.id = buyCounter;
+					mapBuyBook.put(buyCounter, buyBook);
+					buyCounter++;
 				}else {
 					System.out.println("Don't found book");		
 				}
 
 				
-				return ResponseEntity.ok(mapBook.get(id));
+				return ResponseEntity.ok(buyBook.id);
 		
 			}
+	@RequestMapping(value = "/list-buyBook/", method = RequestMethod.GET)	 
+	public ResponseEntity<List<BuyBook>> listBuyBooks()			  
+		    throws Exception {		 
+		 
+		System.out.println("Searching list of buy books ");
+		ArrayList<BuyBook> list = new ArrayList<>(mapBuyBook.values());
+		 
+		 
+		return ResponseEntity.ok(list);
+	}
 }

@@ -10,8 +10,9 @@ public class Books {
 
 	public int id, numPage, yearBook, quantity;
 	public String title, author, synopsis;
+	public double price;
 	
-	public Books(int id, int  numPage, int  yearBook, int  quantity, String title, String author, String synopsis) {
+	public Books(int id, int  numPage, int  yearBook, int  quantity, String title, String author, String synopsis, double price) {
 		this.id = id;
 		this.numPage = numPage;
 		this.yearBook = yearBook;
@@ -19,6 +20,7 @@ public class Books {
 		this.title = title;
 		this.author = author;
 		this.synopsis = synopsis;
+		this.price = price;
 	}
 	
 	public int getId() {
@@ -63,6 +65,10 @@ public class Books {
 	public void setSynopsis(String synopsis) {
 		this.synopsis = synopsis;
 	}
-	
-	
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
 }
