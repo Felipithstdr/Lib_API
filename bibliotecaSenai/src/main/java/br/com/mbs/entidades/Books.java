@@ -1,50 +1,36 @@
 package br.com.mbs.entidades;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Books {
 
-	public int id, numPage, yearBook, quantity;
-	public String title, author, synopsis;
-	public double price;
+	private Integer id_book, numPage, yearBook, quantity;
+	private String title, author, synopsis;
+	private Double price;
+	private String dateRegister = new SimpleDateFormat("dd-mm-yyyy").format(new Date());
 	
-	public Books(int id, int  numPage, int  yearBook, int  quantity, String title, String author, String synopsis, double price) {
-		this.id = id;
-		this.numPage = numPage;
-		this.yearBook = yearBook;
-		this.quantity = quantity;
-		this.title = title;
-		this.author = author;
-		this.synopsis = synopsis;
-		this.price = price;
+	public Integer getId_book() {
+		return id_book;
 	}
-	
-	public int getId() {
-		return id;
+	public void setId_book(Integer id_book) {
+		this.id_book = id_book;
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getNumPage() {
+	public Integer getNumPage() {
 		return numPage;
 	}
-	public void setNumPage(int numPage) {
+	public void setNumPage(Integer numPage) {
 		this.numPage = numPage;
 	}
-	public int getYearBook() {
+	public Integer getYearBook() {
 		return yearBook;
 	}
-	public void setYearBook(int yearBook) {
+	public void setYearBook(Integer yearBook) {
 		this.yearBook = yearBook;
 	}
-	public int getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 	public String getTitle() {
@@ -65,10 +51,16 @@ public class Books {
 	public void setSynopsis(String synopsis) {
 		this.synopsis = synopsis;
 	}
-	public double getPrice() {
+	public Double getPrice() {
 		return price;
 	}
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
 		this.price = price;
+	}
+	public String getDateRegister() {
+		return dateRegister;
+	}
+	public void setDateRegister(String dateRegister) {
+		this.dateRegister = dateRegister;
 	}
 }

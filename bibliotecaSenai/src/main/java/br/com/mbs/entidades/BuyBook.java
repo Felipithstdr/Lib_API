@@ -1,30 +1,31 @@
 package br.com.mbs.entidades;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class BuyBook {
 
-	public int id, quantity;
+	private Integer id, quantity;
+	private String datePurchase = new SimpleDateFormat("dd-mm-yyyy").format(new Date());
 	
-	public BuyBook(int id, int  quantity) {
-		this.id = id;
-		this.quantity = quantity;
-	}
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-	public int getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+	public String getDatePurchase() {
+		return datePurchase;
+	}
+	public void datePurchase(String datePurchase) {
+		this.datePurchase = datePurchase;
 	}
 }
