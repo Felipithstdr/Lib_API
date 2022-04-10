@@ -42,8 +42,8 @@ public class BookController {
 				
 				
 				System.out.println("Processing saveBook...");
-				if( book.getTitle().equals(null)    || book.getTitle().equals("")       || book.getAuthor().equals(null)   || book.getAuthor().equals("")   || book.getNumPage() == null || book.getNumPage().equals("") || 
-					book.getPrice().equals(null)    || book.getPrice().equals("")   || book.getSynopsis().equals(null) || book.getSynopsis().equals("") ||
+				if( book.getTitle().equals(null)    || book.getTitle().equals("")    || book.getAuthor().equals(null)   || book.getAuthor().equals("")   || book.getNumPage() == null || book.getNumPage().equals("") || 
+					book.getPrice().equals(null)    || book.getPrice().equals("")    || book.getSynopsis().equals(null) || book.getSynopsis().equals("") ||
 					book.getYearBook().equals(null) || book.getYearBook().equals("") || book.getQuantity().equals(null) || book.getQuantity().equals("") ) {
 					
 					System.out.println("All data must be fillout! ");
@@ -79,16 +79,18 @@ public class BookController {
 
 	})
 	@RequestMapping(value = "/{id_book}", method = RequestMethod.GET)	 
-	public ResponseEntity<Books> search(@PathVariable("id") Integer id_book) 
+	public ResponseEntity<Books> search(@PathVariable("id_book") Integer id_book) 
 			throws Exception {		 
 				System.out.println("Processing search id...");
 				if(id_book.equals(null) || id_book.equals("")) {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-				}else {
+				}
+				else {
 					if(mapBook.containsKey(id_book)) {
 						System.out.println("Book found");
 						return ResponseEntity.ok(mapBook.get(id_book));
-					}else {
+					}
+					else {
 						System.out.println("Book not found");
 						return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 					}
