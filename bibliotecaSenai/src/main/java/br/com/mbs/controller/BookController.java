@@ -23,14 +23,20 @@ import io.swagger.annotations.ApiResponses;
 public class BookController {
 	
 	//Funcao map, onde salva os dados;
-	Map<Integer, Books> mapBook = new HashMap<Integer, Books>();
+	Map<Integer, Books>   mapBook    = new HashMap<Integer, Books>  ();
 	Map<Integer, BuyBook> mapBuyBook = new HashMap<Integer, BuyBook>();
 	
 	//contador para ID;
 	Integer counter = 1;
 	Integer buyCounter = 1;
 	
-	@ApiOperation (value = "Register book")
+	//campo vazio para numeros int
+	int empty = Integer.parseInt("");
+	
+	//campo vazio para numeros doubles
+	double emptyD = Double.parseDouble("");
+	
+	@ApiOperation(value = "Register book")
 	@ApiResponses(value = {
 			@ApiResponse(code=200 , message="Successfully saved book!"),
 			@ApiResponse(code=400 , message="Missing or invalid request body!")
@@ -38,16 +44,18 @@ public class BookController {
 	})
 	@RequestMapping(value = "/", method = RequestMethod.POST, produces = "application/json")	 
 	public ResponseEntity<Integer> saveBook(@RequestBody Books book)
-			throws Exception {				
+			throws Exception {	
+				
+				
 				System.out.println("Processing saveBook...");
-				if(book.getTitle() == null || book.getTitle().equals("") || book.getAuthor() == null || book.getAuthor().equals("") || book.getNumPage() == null || book.getNumPage().equals("") || 
-						book.getPrice() == null || book.getPrice().equals("") || book.getSynopsis() == null || book.getSynopsis().equals("") ||
-						book.getYearBook()== null || book.getYearBook().equals("") || book.getQuantity() == null || book.getQuantity().equals("") ) {
+				if( book.getTitle().equals(null)    || book.getTitle().equals("")       || book.getAuthor().equals(null)   || book.getAuthor().equals("")   || book.getNumPage() == null || book.getNumPage().equals(empty) || 
+					book.getPrice().equals(null)    || book.getPrice().equals(emptyD)   || book.getSynopsis().equals(null) || book.getSynopsis().equals("") ||
+					book.getYearBook().equals(null) || book.getYearBook().equals(empty) || book.getQuantity().equals(null) || book.getQuantity().equals(empty) ) {
 					
 					System.out.println("All data must be fillout! ");
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				}else {
-					book.getId_book() = counter;	
+					book.setId_book(counter);	
 					mapBook.put(counter, book);
 					counter++;
 					return ResponseEntity.ok(book.getId_book());
@@ -80,7 +88,7 @@ public class BookController {
 	public ResponseEntity<Books> search(@PathVariable("id") Integer id_book) 
 			throws Exception {		 
 				System.out.println("Processing search id...");
-				if(id_book.equals(null) || id_book.equals("")) {
+				if(id_book.equals(null) || id_book.equals(empty)) {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				}else {
 					if(mapBook.containsKey(id_book)) {
@@ -105,16 +113,16 @@ public class BookController {
 			throws Exception {		 
 				System.out.println("Processing buyBook...");
 				
-				if(id.equals(null) || id.equals("")) {
+				if(id.equals(null) || id.equals(empty)) {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				}else {
 					if(mapBook.containsKey(id)) {
-						if(buyBook.getQuantity() == null || buyBook.getQuantity().equals("") ) {
+						if(buyBook.getQuantity() == null || buyBook.getQuantity().equals(empty) ) {
 							System.out.println("All data must be fillout! ");
 							return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 						}else {
 							System.out.println("Book found");
-							buyBook.getId() = buyCounter;
+							buyBook.setId(buyCounter);
 							mapBuyBook.put(buyCounter, buyBook);
 							buyCounter++;
 							return ResponseEntity.ok(buyBook.getId());
