@@ -30,12 +30,6 @@ public class BookController {
 	Integer counter = 1;
 	Integer buyCounter = 1;
 	
-	//campo vazio para numeros int
-	int empty = Integer.parseInt("");
-	
-	//campo vazio para numeros doubles
-	double emptyD = Double.parseDouble("");
-	
 	@ApiOperation(value = "Register book")
 	@ApiResponses(value = {
 			@ApiResponse(code=200 , message="Successfully saved book!"),
@@ -48,9 +42,9 @@ public class BookController {
 				
 				
 				System.out.println("Processing saveBook...");
-				if( book.getTitle().equals(null)    || book.getTitle().equals("")       || book.getAuthor().equals(null)   || book.getAuthor().equals("")   || book.getNumPage() == null || book.getNumPage().equals(empty) || 
-					book.getPrice().equals(null)    || book.getPrice().equals(emptyD)   || book.getSynopsis().equals(null) || book.getSynopsis().equals("") ||
-					book.getYearBook().equals(null) || book.getYearBook().equals(empty) || book.getQuantity().equals(null) || book.getQuantity().equals(empty) ) {
+				if( book.getTitle().equals(null)    || book.getTitle().equals("")       || book.getAuthor().equals(null)   || book.getAuthor().equals("")   || book.getNumPage() == null || book.getNumPage().equals("") || 
+					book.getPrice().equals(null)    || book.getPrice().equals("")   || book.getSynopsis().equals(null) || book.getSynopsis().equals("") ||
+					book.getYearBook().equals(null) || book.getYearBook().equals("") || book.getQuantity().equals(null) || book.getQuantity().equals("") ) {
 					
 					System.out.println("All data must be fillout! ");
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -88,7 +82,7 @@ public class BookController {
 	public ResponseEntity<Books> search(@PathVariable("id") Integer id_book) 
 			throws Exception {		 
 				System.out.println("Processing search id...");
-				if(id_book.equals(null) || id_book.equals(empty)) {
+				if(id_book.equals(null) || id_book.equals("")) {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				}else {
 					if(mapBook.containsKey(id_book)) {
@@ -113,11 +107,11 @@ public class BookController {
 			throws Exception {		 
 				System.out.println("Processing buyBook...");
 				
-				if(id.equals(null) || id.equals(empty)) {
+				if(id.equals(null) || id.equals("")) {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				}else {
 					if(mapBook.containsKey(id)) {
-						if(buyBook.getQuantity() == null || buyBook.getQuantity().equals(empty) ) {
+						if(buyBook.getQuantity() == null || buyBook.getQuantity().equals("") ) {
 							System.out.println("All data must be fillout! ");
 							return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 						}else {
