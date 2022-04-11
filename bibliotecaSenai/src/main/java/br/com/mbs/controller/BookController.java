@@ -1,8 +1,7 @@
 package br.com.mbs.controller;
+import br.com.mbs.data.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,14 +21,14 @@ import io.swagger.annotations.ApiResponses;
 @Api(description="Book API")
 public class BookController {
 	
-	//Funcao map, onde salva os dados;
-	Map<Integer, Books>   mapBook    = new HashMap<Integer, Books>  ();
-	Map<Integer, BuyBook> mapBuyBook = new HashMap<Integer, BuyBook>();
-	
+	ListData listData = new ListData();
+		
 	//contador para ID;
 	Integer counter = 1;
 	Integer buyCounter = 1;
 	
+	
+	//------------------------------------------------------------------------- INICIO
 	@ApiOperation(value = "Register book")
 	@ApiResponses(value = {
 			@ApiResponse(code=200 , message="Successfully saved book!"),
@@ -39,8 +38,7 @@ public class BookController {
 	@RequestMapping(value = "/", method = RequestMethod.POST, produces = "application/json")	 
 	public ResponseEntity<Integer> saveBook(@RequestBody Books book)
 			throws Exception {	
-				
-				
+								
 				System.out.println("Processing saveBook...");
 				if( book.getTitle().equals(null)    || book.getTitle().equals("")    || book.getAuthor().equals(null)   || book.getAuthor().equals("")   || book.getNumPage() == null || book.getNumPage().equals("") || 
 					book.getPrice().equals(null)    || book.getPrice().equals("")    || book.getSynopsis().equals(null) || book.getSynopsis().equals("") ||
@@ -50,12 +48,13 @@ public class BookController {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				}else {
 					book.setId_book(counter);	
-					mapBook.put(counter, book);
+					listData.getMapBook().put(counter, book);
 					counter++;
 					return ResponseEntity.ok(book.getId_book());
 				}
 	}
 	
+	//------------------------------------------------------------------------- LIST BOOKS
 	@ApiOperation (value = "List book")
 	@ApiResponses(value = {
 			@ApiResponse(code=200 , message="Book found!"),
@@ -66,12 +65,14 @@ public class BookController {
 		    throws Exception {		 
 		 
 				System.out.println("Searching list of books ");
-				ArrayList<Books> list = new ArrayList<>(mapBook.values());
+				listData.showList();
+				ArrayList<Books> list = new ArrayList<>(listData.getMapBook().values());
 				 
 				return ResponseEntity.ok(list);
 	}
 	
-	@ApiOperation (value = "List by books id")
+	//------------------------------------------------------------------------- ID_BOOK
+	@ApiOperation (value = "List by book's id")
 	@ApiResponses(value = {
 			@ApiResponse(code=200 , message="Book Found!"),
 			@ApiResponse(code=204 , message="Book not found!"),
@@ -86,9 +87,9 @@ public class BookController {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				}
 				else {
-					if(mapBook.containsKey(id_book)) {
+					if(listData.getMapBook().containsKey(id_book)) {
 						System.out.println("Book found");
-						return ResponseEntity.ok(mapBook.get(id_book));
+						return ResponseEntity.ok(listData.getMapBook().get(id_book));
 					}
 					else {
 						System.out.println("Book not found");
@@ -97,6 +98,7 @@ public class BookController {
 				}
 	}
 	
+	//------------------------------------------------------------------------- BUY BOOK
 	@ApiOperation (value = "Buy book")
 	@ApiResponses(value = {
 			@ApiResponse(code=200 , message="Book inserted for purchase!"),
@@ -112,14 +114,14 @@ public class BookController {
 				if(id.equals(null) || id.equals("")) {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				}else {
-					if(mapBook.containsKey(id)) {
+					if(listData.getMapBook().containsKey(id)) {
 						if(buyBook.getQuantity() == null || buyBook.getQuantity().equals("") ) {
 							System.out.println("All data must be fillout! ");
 							return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 						}else {
 							System.out.println("Book found");
 							buyBook.setId(buyCounter);
-							mapBuyBook.put(buyCounter, buyBook);
+							listData.getMapBuyBook().put(buyCounter, buyBook);
 							buyCounter++;
 							return ResponseEntity.ok(buyBook.getId());
 						}
@@ -130,7 +132,8 @@ public class BookController {
 				}
 	}
 	
-	@ApiOperation (value = "List of the bought booknn")
+	//------------------------------------------------------------------------- LIST BUY BOOK
+	@ApiOperation(value = "List of the bought booknn")
 	@ApiResponses(value = {
 			@ApiResponse(code=200 , message="Purchase found"),
 			@ApiResponse(code=204 , message="Purchase not found !")
@@ -140,7 +143,7 @@ public class BookController {
 		    throws Exception {		 
 		 
 		System.out.println("Searching list of buy books ");
-		ArrayList<BuyBook> listPurchase = new ArrayList<>(mapBuyBook.values());
+		ArrayList<BuyBook> listPurchase = new ArrayList<>(listData.getMapBuyBook().values());
 		return ResponseEntity.ok(listPurchase);
 	}
 }
