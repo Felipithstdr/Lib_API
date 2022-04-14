@@ -1,0 +1,22 @@
+{
+  "author": "Jorge",
+  "dateRegister": "10/10/2020",
+  "id_book": 0,
+  "numPage": 1010,
+  "price": 10.10,
+  "quantity": 10,
+  "synopsis": "Jorge",
+  "title": "Jorge",
+  "yearBook": 2010
+},
+{
+  "author": "Camila",
+  "dateRegister": "10/10/2020",
+  "id_book": 0,
+  "numPage": 1010,
+  "price": 10.10,
+  "quantity": 10,
+  "synopsis": "Camila",
+  "title": "Camila",
+  "yearBook": 2010
+}

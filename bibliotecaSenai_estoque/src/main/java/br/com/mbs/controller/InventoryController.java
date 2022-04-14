@@ -16,42 +16,60 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mbs.entidades.Inventory;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController(value="API para verificação de estoque de livros")
 @RequestMapping("Estoque de livros")
 @Api(description="Api de estoque livros")
 public class InventoryController {
 	
-	Map<String, Inventory> mapaInventory = new HashMap<String, Inventory>();
-	
-	public InventoryController() {
-		// TODO Auto-generated constructor stub
-		Inventory inventory = new Inventory();
-		mapaInventory.put("20", inventory);
-		
-		Inventory inventory2 = new Inventory();
-		mapaInventory.put("25", inventory2);
-	}
-	
-	@RequestMapping(value = "/{inventory}", method = RequestMethod.GET)	 
-	public ResponseEntity<Boolean> verifyInventory(
-			@PathVariable("inventory") String inventory
-			) throws Exception {		 
-		System.out.println("Processando verifica estoque");
-		
-		Boolean verifyInventory = mapaInventory.containsKey(inventory); 
-		
-		return ResponseEntity.ok(verifyInventory);
-	}
-	
-	@RequestMapping(value = "/busca-cep/{cep}", method = RequestMethod.GET)	 
-	public ResponseEntity<Inventory> buscaCep(
-			@PathVariable("cep") String cep
-			) throws Exception {		 
-		System.out.println("Processando busca-cep");
-		
-		Inventory objCep = mapaCep.get(cep); 
-		
-		return ResponseEntity.ok(objCep);
-	}
+	private Map<Integer,Integer> mapInventory = new HashMap();// chaveProduto,quantidade
+	 
+	 
+	 @ApiOperation(value = "Verifica se existe um produto no estoque")
+	 @ApiResponses(value = {
+		    @ApiResponse(code = 200, message = "Sucesso na verificacao do estoque"),
+		    @ApiResponse(code = 204, message = "Produto nao encontrado")
+	 })
+	 @RequestMapping(value = "/verificar-estoque", method = RequestMethod.GET, produces="application/json")	 
+	  public ResponseEntity<Boolean> verifyInventory(Integer id_book,Integer quantity) throws Exception {		 
+		 System.out.println("Processando verificarEstoque");
+		 if(mapInventory.containsKey(id_book)) { 
+			 return new ResponseEntity<>(processaVerificarEstoque(id_book,quantity),HttpStatus.OK);	 
+		 }else {
+			 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		 }
+		 
+	  }
+	 	 
+	 
+	 @ApiOperation(value = "Atualiza um produto no estoque")
+	 @ApiResponses(value = {
+			    @ApiResponse(code = 200, message = "Sucesso na atualizacao do estoque")			    
+			})
+	 @RequestMapping(value = "/atualizar-estoque", method = RequestMethod.GET, produces="application/json")	 
+	  public ResponseEntity<Boolean> atualizarEstoque(Integer id_book,Integer quantity) throws Exception {		 
+		 System.out.println("Processando atualizarEstoque");
+		 if(mapInventory.containsKey(id_book)) {
+			 Integer quantidadeAtual = mapInventory.get(id_book);
+			 Integer novaQuantidade = quantidadeAtual - quantity;
+			 mapInventory.put(id_book, novaQuantidade < 0 ? quantidadeAtual : novaQuantidade);
+		 }else {
+			 mapInventory.put(id_book, quantity);
+		 }
+		 return  new ResponseEntity<>(true,HttpStatus.OK);	 
+		 
+	  }
+	 
+	 private boolean processaVerificarEstoque(Integer id_book,Integer quantity) {		 		 
+		 boolean retorno = false;
+		 if(quantity != 0) {
+			Integer quantidadeAtual = mapInventory.get(id_book);
+			retorno = (quantity - quantidadeAtual) <= 0;	  
+		 }
+		 return retorno;
+		 
+	 }
 }
