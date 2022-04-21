@@ -28,10 +28,10 @@ public class InventoryController {
 	private Map<Integer,Integer> mapInventory = new HashMap();// chaveProduto,quantidade
 	 
 	 
-	 @ApiOperation(value = "Verifica se existe um produto no estoque")
+	 @ApiOperation(value = "Verifica se existe um livro no estoque")
 	 @ApiResponses(value = {
-		    @ApiResponse(code = 200, message = "Sucesso na verificacao do estoque"),
-		    @ApiResponse(code = 204, message = "Produto nao encontrado")
+		    @ApiResponse(code = 200, message = "Livro encontrado"),
+		    @ApiResponse(code = 204, message = "Livro nao encontrado")
 	 })
 	 @RequestMapping(value = "/verificar-estoque", method = RequestMethod.GET, produces="application/json")	 
 	  public ResponseEntity<Boolean> verifyInventory(Integer id_book,Integer quantity) throws Exception {		 
@@ -45,11 +45,11 @@ public class InventoryController {
 	  }
 	 	 
 	 
-	 @ApiOperation(value = "Atualiza um produto no estoque")
+	 @ApiOperation(value = "Atualiza um livro no estoque")
 	 @ApiResponses(value = {
 			    @ApiResponse(code = 200, message = "Sucesso na atualizacao do estoque")			    
 			})
-	 @RequestMapping(value = "/atualizar-estoque", method = RequestMethod.GET, produces="application/json")	 
+	 @RequestMapping(value = "/atualizar-estoque", method = RequestMethod.POST, produces="application/json")	 
 	  public ResponseEntity<Boolean> atualizarEstoque(Integer id_book,Integer quantity) throws Exception {		 
 		 System.out.println("Processando atualizarEstoque");
 		 if(mapInventory.containsKey(id_book)) {
