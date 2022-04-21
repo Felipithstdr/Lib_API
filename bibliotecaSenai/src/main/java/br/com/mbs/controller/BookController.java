@@ -146,4 +146,12 @@ public class BookController {
 		ArrayList<BuyBook> listPurchase = new ArrayList<>(listData.getMapBuyBook().values());
 		return ResponseEntity.ok(listPurchase);
 	}
+	
+	//------------------------------------------------------------------------- EXECUTE BUY LOT
+	@RequestMapping(value = "/execute-buy-lot/", method = RequestMethod.GET)	 
+	public ResponseEntity<Books> executeBuyLot()			  
+		    throws Exception {		 
+				System.out.println("Processing execute buy lot ");
+				return new ResponseEntity<>(HttpStatus.OK);
+	}
 }
