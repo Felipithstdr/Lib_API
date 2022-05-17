@@ -27,7 +27,6 @@ public class BookController {
 	Integer counter = 1;
 	Integer buyCounter = 1;
 	
-	
 	//------------------------------------------------------------------------- INICIO
 	@ApiOperation(value = "Register book")
 	@ApiResponses(value = {

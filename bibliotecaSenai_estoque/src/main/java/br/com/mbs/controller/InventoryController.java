@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController(value="API para verificação de estoque de livros")
-@RequestMapping("Estoque de livros")
+@RequestMapping("Inventory")
 @Api(description="Api de estoque livros")
 public class InventoryController {
 	
@@ -37,7 +37,9 @@ public class InventoryController {
 	  public ResponseEntity<Boolean> verifyInventory(Integer id_book,Integer quantity) throws Exception {		 
 		 System.out.println("Processando verificarEstoque");
 		 if(mapInventory.containsKey(id_book)) { 
+			 
 			 return new ResponseEntity<>(processaVerificarEstoque(id_book,quantity),HttpStatus.OK);	 
+			 
 		 }else {
 			 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		 }
@@ -53,9 +55,10 @@ public class InventoryController {
 	  public ResponseEntity<Boolean> atualizarEstoque(Integer id_book,Integer quantity) throws Exception {		 
 		 System.out.println("Processando atualizarEstoque");
 		 if(mapInventory.containsKey(id_book)) {
-			 Integer quantidadeAtual = mapInventory.get(id_book);
-			 Integer novaQuantidade = quantidadeAtual - quantity;
-			 mapInventory.put(id_book, novaQuantidade < 0 ? quantidadeAtual : novaQuantidade);
+			 //Integer quantidadeAtual = mapInventory.get(id_book);
+			 //Integer novaQuantidade = quantidadeAtual - quantity;
+			 //mapInventory.put(id_book, novaQuantidade < 0 ? quantidadeAtual : novaQuantidade);
+			 mapInventory.put(id_book, quantity);
 		 }else {
 			 mapInventory.put(id_book, quantity);
 		 }
@@ -68,6 +71,7 @@ public class InventoryController {
 		 if(quantity != 0) {
 			Integer quantidadeAtual = mapInventory.get(id_book);
 			retorno = (quantity - quantidadeAtual) <= 0;	  
+			
 		 }
 		 return retorno;
 		 
