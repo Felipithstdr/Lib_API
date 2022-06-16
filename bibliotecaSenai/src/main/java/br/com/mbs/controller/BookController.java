@@ -2,6 +2,17 @@ package br.com.mbs.controller;
 import br.com.mbs.data.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import br.com.mbs.entidades.Books;
 import br.com.mbs.entidades.BuyBook;
+import br.com.mbs.repositorio.InventoryRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -21,7 +33,17 @@ import io.swagger.annotations.ApiResponses;
 @Api(description="Book API")
 public class BookController {
 	
+	@Autowired
+	private InventoryRepository inventoryRepository; 
+	
 	ListData listData = new ListData();
+	
+	@Autowired
+    private JobLauncher jobLauncher;
+	
+	@Autowired
+    private Job processJob;
+	
 		
 	//contador para ID;
 	Integer counter = 1;
@@ -112,24 +134,34 @@ public class BookController {
 				
 				if(id.equals(null) || id.equals("")) {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-				}else {
-					if(listData.getMapBook().containsKey(id)) {
-						if(buyBook.getQuantity() == null || buyBook.getQuantity().equals("") ) {
-							System.out.println("All data must be fillout! ");
-							return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-						}else {
-							System.out.println("Book found");
-							buyBook.setId(buyCounter);
-							listData.getMapBuyBook().put(buyCounter, buyBook);
-							buyCounter++;
-							return ResponseEntity.ok(buyBook.getId());
-						}
-					}else {
-						System.out.println("Book not found");		
-						return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+				}
+				else if(listData.getMapBook().containsKey(id)) {
+						
+					ResponseEntity<Boolean> verifyInventoryRE =  inventoryRepository.verifyInventory(id, buyBook.getQuantity());
+					Boolean existeInventario = verifyInventoryRE.getBody();
+					System.out.println("exteInventario " +  existeInventario);
+					
+					if(existeInventario) {
+						System.out.println("Book found");
+						buyBook.setId(buyCounter);
+						//listData.getMapBuyBook().put(buyCounter, buyBook);
+						Map<Integer, BuyBook> myMap = listData.getMapBuyBook();
+						 myMap.put(buyCounter, buyBook);
+						 
+						buyCounter++;
+						inventoryRepository.atualizarEstoque(id, buyBook.getQuantity());
+						return ResponseEntity.ok(buyBook.getId());
 					}
+					else {
+						return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+					}											
+				}
+				else {
+					System.out.println("Book not found");		
+					return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 				}
 	}
+		
 	
 	//------------------------------------------------------------------------- LIST BUY BOOK
 	@ApiOperation(value = "List of the bought booknn")
@@ -149,8 +181,12 @@ public class BookController {
 	//------------------------------------------------------------------------- EXECUTE BUY LOT
 	@RequestMapping(value = "/execute-buy-lot/", method = RequestMethod.GET)	 
 	public ResponseEntity<Books> executeBuyLot()			  
-		    throws Exception {		 
+		    throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException{		 
 				System.out.println("Processing execute buy lot ");
+				JobParameters jobParameters = new JobParametersBuilder()
+						.addLong("time", System.currentTimeMillis())
+		                .toJobParameters();
+		        jobLauncher.run(processJob, jobParameters); 
 				return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
