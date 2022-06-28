@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.batch.item.ItemWriter;
 
+import br.com.mbs.entidades.Books;
 import br.com.mbs.entidades.BuyBook;
 
 public class BookWriter implements ItemWriter<BuyBook>{
@@ -15,7 +16,7 @@ public class BookWriter implements ItemWriter<BuyBook>{
 		System.out.println("Write");
 		
 		for(BuyBook books : items) {
-			String conteudo = "Qtd: " + books.getQuantity() + "-" + "ID: " + books.getId();
+			String conteudo = "ID: " + books.getId() + "Livro: " + books.getTitle() + "Preço: " + books.getPrice();
 			FileWriter fw = new FileWriter(fileName, true);
 		    BufferedWriter bw = new BufferedWriter(fw);
 		    bw.write(conteudo);

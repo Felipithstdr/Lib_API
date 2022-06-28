@@ -11,11 +11,13 @@ public class BookProcessor implements ItemProcessor<BuyBook, BuyBook> {
 	public BuyBook process(BuyBook item) throws Exception {
 		System.out.println("Processor " + item);
 		// logica de negocio (processaemnto)
-		item.setQuantity(item.getQuantity());
+		Boolean teste = item.getPrice() > 10;
+		System.out.print("resposta " + teste);
+		if(teste) { 
+			return item;
+		}
 		
-		//if(item.preco > 10) { return item}
-		
-		return item;
+		return null;
 	}
 
 }

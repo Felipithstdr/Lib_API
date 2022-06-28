@@ -3,8 +3,10 @@ package br.com.mbs.entidades;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.springframework.http.ResponseEntity;
 
-public class BuyBook {
+
+public class BuyBook extends Books{
 
 	private Integer id, quantity;
 	//private Books books;
