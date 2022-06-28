@@ -18,13 +18,13 @@ import org.springframework.context.annotation.Bean;
 @EnableFeignClients
 @EnableBatchProcessing
 public class Main {
-	
+
 	@Autowired
     private Job processJob;
 
 	@Autowired
     private JobLauncher jobLauncher;
-
+	
 	public static void main(String[] args) {
 		   SpringApplication.run(Main.class, args);
 

@@ -12,11 +12,12 @@ import org.springframework.context.annotation.Configuration;
 import br.com.mbs.batch.item.BookProcessor;
 import br.com.mbs.batch.item.BookReader;
 import br.com.mbs.batch.item.BookWriter;
-import br.com.mbs.entidades.Books;
+import br.com.mbs.entidades.BuyBook;
 
 @Configuration
 public class BatchConfiguration {
-	
+
+
 	@Autowired
 	public JobBuilderFactory jobBuilderFactory;
 
@@ -48,11 +49,10 @@ public class BatchConfiguration {
 	@Bean
 	public Step orderStep1() {
 		return stepBuilderFactory.get("orderStep1").
-				<Books, Books> chunk(1)
+				<BuyBook, BuyBook> chunk(1)
 				.reader(bookReader())
 				.processor(bookProcessor())
 				.writer(bookWriter())
 				.build();
 	}	
-
 }

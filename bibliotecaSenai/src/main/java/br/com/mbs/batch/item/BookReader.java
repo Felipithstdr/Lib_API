@@ -8,31 +8,38 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import br.com.mbs.entidades.Books;
+import br.com.mbs.entidades.BuyBook;
+import br.com.mbs.service.BookService;
 
-public class BookReader implements ItemReader<Books>{
+
+public class BookReader implements ItemReader<BuyBook>{
 	
-	private Iterator<Books> it ;
+	@Autowired
+	private BookService bookService;
 	
-	private boolean jaBuscado;
+	private Iterator<BuyBook> it ;
 	
-	 @PostConstruct
-	 public void postConstruct() {       
-	 }
+	private BuyBook buyBook;
+	
+	@PostConstruct
+	public void postConstruct() {				       
+	}
 
 	@Override
-	public Books read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-		System.out.println("Reader");
-		if(jaBuscado == false) {
-			//it = usuarioServico.listar().iterator(); verificar essa parte
-			jaBuscado = true;
-		}
-		while(it.hasNext()) {
-			return it.next();
-		}
+	public BuyBook read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+System.out.println("Reader");
 		
-		return null;
+		if(buyBook == null) {
+			it = bookService.getMapBuyBook().values().iterator();
+		}
+			
+		while(it.hasNext()) {
+			return buyBook = it.next();			
+		}	
+		buyBook = null;
+		return buyBook;
 	}
 
 }

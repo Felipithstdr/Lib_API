@@ -2,15 +2,18 @@ package br.com.mbs.batch.item;
 
 import org.springframework.batch.item.ItemProcessor;
 
-import br.com.mbs.entidades.Books;
+import br.com.mbs.entidades.BuyBook;
 
-public class BookProcessor implements ItemProcessor<Books, Books>{
+
+public class BookProcessor implements ItemProcessor<BuyBook, BuyBook> {
 
 	@Override
-	public Books process(Books item) throws Exception {
+	public BuyBook process(BuyBook item) throws Exception {
 		System.out.println("Processor " + item);
 		// logica de negocio (processaemnto)
-		item.setTitle(item.getTitle().toUpperCase());
+		item.setQuantity(item.getQuantity());
+		
+		//if(item.preco > 10) { return item}
 		
 		return item;
 	}

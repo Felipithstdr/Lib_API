@@ -7,6 +7,7 @@ import java.util.Date;
 public class BuyBook {
 
 	private Integer id, quantity;
+	//private Books books;
 	private String datePurchase = new SimpleDateFormat("dd-mm-yyyy").format(new Date());
 	
 	
@@ -28,4 +29,5 @@ public class BuyBook {
 	public void datePurchase(String datePurchase) {
 		this.datePurchase = datePurchase;
 	}
+	
 }

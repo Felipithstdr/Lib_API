@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.mbs.entidades.Books;
 import br.com.mbs.entidades.BuyBook;
 import br.com.mbs.repositorio.InventoryRepository;
+import br.com.mbs.service.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -34,16 +35,18 @@ import io.swagger.annotations.ApiResponses;
 public class BookController {
 	
 	@Autowired
-	private InventoryRepository inventoryRepository; 
+	private InventoryRepository inventoryRepository;
 	
-	ListData listData = new ListData();
+	@Autowired
+	private BookService bookService;
 	
 	@Autowired
     private JobLauncher jobLauncher;
-	
+
 	@Autowired
     private Job processJob;
 	
+	//ListData listData = new ListData();
 		
 	//contador para ID;
 	Integer counter = 1;
@@ -69,7 +72,7 @@ public class BookController {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				}else {
 					book.setId_book(counter);	
-					listData.getMapBook().put(counter, book);
+					bookService.getMapBook().put(counter, book);
 					counter++;
 					return ResponseEntity.ok(book.getId_book());
 				}
@@ -86,8 +89,8 @@ public class BookController {
 		    throws Exception {		 
 		 
 				System.out.println("Searching list of books ");
-				listData.showList();
-				ArrayList<Books> list = new ArrayList<>(listData.getMapBook().values());
+				bookService.showList();
+				ArrayList<Books> list = new ArrayList<>(bookService.getMapBook().values());
 				 
 				return ResponseEntity.ok(list);
 	}
@@ -108,9 +111,9 @@ public class BookController {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				}
 				else {
-					if(listData.getMapBook().containsKey(id_book)) {
+					if(bookService.getMapBook().containsKey(id_book)) {
 						System.out.println("Book found");
-						return ResponseEntity.ok(listData.getMapBook().get(id_book));
+						return ResponseEntity.ok(bookService.getMapBook().get(id_book));
 					}
 					else {
 						System.out.println("Book not found");
@@ -131,37 +134,37 @@ public class BookController {
 	public ResponseEntity<Integer> buyBook(@PathVariable("id") Integer id, @RequestBody BuyBook buyBook)
 			throws Exception {		 
 				System.out.println("Processing buyBook...");
-				
+
 				if(id.equals(null) || id.equals("")) {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-				}
-				else if(listData.getMapBook().containsKey(id)) {
-						
-					ResponseEntity<Boolean> verifyInventoryRE =  inventoryRepository.verifyInventory(id, buyBook.getQuantity());
-					Boolean existeInventario = verifyInventoryRE.getBody();
-					System.out.println("exteInventario " +  existeInventario);
-					
-					if(existeInventario) {
-						System.out.println("Book found");
-						buyBook.setId(buyCounter);
-						//listData.getMapBuyBook().put(buyCounter, buyBook);
-						Map<Integer, BuyBook> myMap = listData.getMapBuyBook();
-						 myMap.put(buyCounter, buyBook);
-						 
-						buyCounter++;
-						inventoryRepository.atualizarEstoque(id, buyBook.getQuantity());
-						return ResponseEntity.ok(buyBook.getId());
+				}else {
+					if(bookService.getMapBook().containsKey(id)) {
+
+						ResponseEntity<Boolean> verifyInventoryRE =  inventoryRepository.verifyInventory(id, buyBook.getQuantity());
+						Boolean existeInventario = verifyInventoryRE.getBody();
+						System.out.println("exteInventario " +  existeInventario);
+
+						if(existeInventario) {
+							System.out.println("Book found");
+							buyBook.setId(buyCounter);
+							//listData.getMapBuyBook().put(buyCounter, buyBook);
+							Map<Integer, BuyBook> myMap = bookService.getMapBuyBook();
+							 myMap.put(buyCounter, buyBook);
+
+							buyCounter++;
+							inventoryRepository.atualizarEstoque(id, buyBook.getQuantity());
+							return ResponseEntity.ok(buyBook.getId());
+						}
+						else {
+							return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+						}											
 					}
 					else {
-						return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-					}											
-				}
-				else {
-					System.out.println("Book not found");		
-					return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-				}
+						System.out.println("Book not found");		
+						return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+					}
+		}
 	}
-		
 	
 	//------------------------------------------------------------------------- LIST BUY BOOK
 	@ApiOperation(value = "List of the bought booknn")
@@ -174,19 +177,18 @@ public class BookController {
 		    throws Exception {		 
 		 
 		System.out.println("Searching list of buy books ");
-		ArrayList<BuyBook> listPurchase = new ArrayList<>(listData.getMapBuyBook().values());
+		ArrayList<BuyBook> listPurchase = new ArrayList<>(bookService.getMapBuyBook().values());
 		return ResponseEntity.ok(listPurchase);
 	}
 	
 	//------------------------------------------------------------------------- EXECUTE BUY LOT
 	@RequestMapping(value = "/execute-buy-lot/", method = RequestMethod.GET)	 
-	public ResponseEntity<Books> executeBuyLot()			  
-		    throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException{		 
-				System.out.println("Processing execute buy lot ");
-				JobParameters jobParameters = new JobParametersBuilder()
-						.addLong("time", System.currentTimeMillis())
-		                .toJobParameters();
-		        jobLauncher.run(processJob, jobParameters); 
-				return new ResponseEntity<>(HttpStatus.OK);
-	}
+	public ResponseEntity<Books> executeBuyLot() throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException{		 
+					System.out.println("Processing execute buy lot ");
+					JobParameters jobParameters = new JobParametersBuilder()
+							.addLong("time", System.currentTimeMillis())
+			                .toJobParameters();
+			        jobLauncher.run(processJob, jobParameters); 
+					return new ResponseEntity<>(HttpStatus.OK);
+		}
 }

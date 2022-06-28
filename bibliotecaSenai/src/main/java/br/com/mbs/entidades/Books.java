@@ -1,15 +1,14 @@
 package br.com.mbs.entidades;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Books {
-	
+
 	private Integer id_book, numPage, yearBook, quantity;
 	private String title, author, synopsis;
 	private Double price;
-	private String data =  new SimpleDateFormat("dd/MM/yyyy").format(new Date()); 
-
+	private String dateRegister = new SimpleDateFormat("dd-mm-yyyy").format(new Date());
+	
 	public Integer getId_book() {
 		return id_book;
 	}
@@ -58,10 +57,10 @@ public class Books {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-	public String getData() {
-		return data;
+	public String getDateRegister() {
+		return dateRegister;
 	}
-	public void setData(String data) {
-		this.data = data;
+	public void setDateRegister(String dateRegister) {
+		this.dateRegister = dateRegister;
 	}
 }
