@@ -1,6 +1,9 @@
 package br.com.mbs.controller;
 import br.com.mbs.data.*;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -62,8 +65,9 @@ public class BookController {
 	@RequestMapping(value = "/", method = RequestMethod.POST, produces = "application/json")	 
 	public ResponseEntity<Integer> saveBook(@RequestBody Books book)
 			throws Exception {	
-								
 				System.out.println("Processing saveBook...");
+				String dataRegister = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+				book.setDateRegister(dataRegister);
 				if( book.getTitle().equals(null)    || book.getTitle().equals("")    || book.getAuthor().equals(null)   || book.getAuthor().equals("")   || book.getNumPage() == null || book.getNumPage().equals("") || 
 					book.getPrice().equals(null)    || book.getPrice().equals("")    || book.getSynopsis().equals(null) || book.getSynopsis().equals("") ||
 					book.getYearBook().equals(null) || book.getYearBook().equals("") || book.getQuantity().equals(null) || book.getQuantity().equals("") ) {
@@ -134,7 +138,8 @@ public class BookController {
 	public ResponseEntity<Integer> buyBook(@PathVariable("id") Integer id, @RequestBody BuyBook buyBook)
 			throws Exception {		 
 				System.out.println("Processing buyBook...");
-
+				String datePurchase = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+				buyBook.datePurchase(datePurchase);;
 				if(id.equals(null) || id.equals("")) {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				}else {
@@ -149,7 +154,7 @@ public class BookController {
 							buyBook.setId(buyCounter);
 							//listData.getMapBuyBook().put(buyCounter, buyBook);
 							Map<Integer, BuyBook> myMap = bookService.getMapBuyBook();
-							 myMap.put(buyCounter, buyBook);
+							myMap.put(buyCounter, buyBook);
 
 							buyCounter++;
 							inventoryRepository.atualizarEstoque(id, buyBook.getQuantity());

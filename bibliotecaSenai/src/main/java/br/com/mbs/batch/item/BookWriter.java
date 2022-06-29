@@ -16,7 +16,8 @@ public class BookWriter implements ItemWriter<BuyBook>{
 		System.out.println("Write");
 		
 		for(BuyBook books : items) {
-			String conteudo = "ID: " + books.getId() + "Livro: " + books.getTitle() + "Preço: " + books.getPrice();
+			String conteudo = "ID: " + books.getId() + " - " + "Título do livro: " + books.getTitle() 
+			+ " - " + "Preço: R$ " + books.getPrice();
 			FileWriter fw = new FileWriter(fileName, true);
 		    BufferedWriter bw = new BufferedWriter(fw);
 		    bw.write(conteudo);
